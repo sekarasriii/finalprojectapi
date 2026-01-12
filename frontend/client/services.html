@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services | FeSpace Studio</title>
+    <meta name="description" content="Explore innovative architectural and design services offered by FeSpace Studio.">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <h1>FeSpace Studio</h1>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="dashboard.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>Dashboard</a></li>
+                <li><a href="services.html" class="active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>Layanan</a></li>
+                <li><a href="orders.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>Pesanan Saya</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout()" class="sidebar-nav-logout">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <h2>Layanan Tersedia</h2>
+            </header>
+
+            <div class="content-container">
+                <div id="servicesGrid" class="projects-grid">Loading...</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="modal hidden"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+        <div class="card" style="width: 90%; max-width: 500px;">
+            <div class="card-header">
+                <h3 class="card-title">Buat Pesanan</h3>
+            </div>
+            <div class="card-body">
+                <form id="orderForm" onsubmit="createOrder(event)">
+                    <input type="hidden" id="selectedServiceId">
+                    <div class="form-group">
+                        <label>Layanan</label>
+                        <input type="text" id="selectedServiceName" readonly style="background: var(--bg-hover);">
+                    </div>
+                    <div class="form-group">
+                        <label>Harga</label>
+                        <input type="text" id="selectedServicePrice" readonly style="background: var(--bg-hover);">
+                    </div>
+                    <div class="form-group">
+                        <label>Catatan (Optional)</label>
+                        <textarea id="orderNotes" rows="3"
+                            placeholder="Tambahkan catatan untuk pesanan Anda..."></textarea>
+                    </div>
+                    <div class="flex gap-md">
+                        <button type="submit" class="btn btn-primary">Buat Pesanan</button>
+                        <button type="button" onclick="closeModal()" class="btn btn-secondary">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        const user = getFromStorage('user');
+        if (!user || user.role !== 'client') {
+            alert('Akses ditolak.');
+            window.location.href = '../login.html';
+        }
+
+        const apiKey = getFromStorage('apiKey');
+        if (!apiKey) {
+            alert('Generate API Key terlebih dahulu di dashboard.');
+            window.location.href = 'dashboard.html';
+        }
+
+        async function loadServices() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/services`, {
+                    headers: { 'x-api-key': apiKey }
+                });
+
+                const data = await response.json();
+                if (data.success) displayServices(data.data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function displayServices(services) {
+            if (services.length === 0) {
+                document.getElementById('servicesGrid').innerHTML = '<p>Belum ada layanan tersedia.</p>';
+                return;
+            }
+
+            const html = services.map(s => `
+                <div class="project-card">
+                    <div class="project-thumbnail">
+                        ${s.image_url ?
+                    `<img src="${API_CONFIG.BASE_URL.replace('/api', '')}${s.image_url}" alt="${s.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                    `<img src="${getServiceImage(s.category)}" alt="${s.category}" style="width: 100%; height: 100%; object-fit: cover;">`
+                }
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">${s.name}</h3>
+                        <p class="project-description">${s.description || 'Tidak ada deskripsi'}</p>
+                        <div class="project-meta">
+                            <div>
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">Harga:</span>
+                                <strong style="color: var(--accent-orange); font-size: 1.1rem; display: block;">Rp ${parseInt(s.price).toLocaleString('id-ID')}</strong>
+                            </div>
+                            <button onclick='showOrderModal(${JSON.stringify(s)})' class="btn btn-primary" style="padding: var(--spacing-xs) var(--spacing-md);">
+                                Pesan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('servicesGrid').innerHTML = html;
+        }
+
+        function getServiceImage(category) {
+            const images = {
+                'Residential': '../img/service_residential.png',
+                'Commercial': '../img/service_commercial.png',
+                'Interior': '../img/service_interior.png',
+                'Landscape': '../img/service_urban.png',
+                'Urban Planning': '../img/service_urban.png',
+                'Consultation': '../img/service_urban.png'
+            };
+            return images[category] || '../img/portfolio1.png';
+        }
+
+        function showOrderModal(service) {
+            document.getElementById('selectedServiceId').value = service.id;
+            document.getElementById('selectedServiceName').value = service.name;
+            document.getElementById('selectedServicePrice').value = 'Rp ' + parseInt(service.price).toLocaleString('id-ID');
+            document.getElementById('orderModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').classList.add('hidden');
+            document.getElementById('orderForm').reset();
+        }
+
+        async function createOrder(e) {
+            e.preventDefault();
+
+            const serviceId = document.getElementById('selectedServiceId').value;
+            const notes = document.getElementById('orderNotes').value;
+
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey
+                    },
+                    body: JSON.stringify({ service_id: serviceId, notes })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Pesanan berhasil dibuat!');
+                    closeModal();
+                    window.location.href = 'orders.html';
+                } else {
+                    alert('Gagal membuat pesanan: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat membuat pesanan.');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadServices);
+    </script>
+</body>
+
+</html>

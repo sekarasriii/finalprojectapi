@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Services | FeSpace Studio</title>
+    <meta name="description" content="Manage architectural service listings and design portfolios for FeSpace Studio.">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <h1>FeSpace Studio</h1>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="dashboard.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>Dashboard</a></li>
+                <li><a href="services.html" class="active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>Kelola Layanan</a></li>
+                <li><a href="orders.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>Kelola Pesanan</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout()" class="sidebar-nav-logout">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <h2 style="margin: 0;">Kelola Layanan</h2>
+                <button onclick="showAddForm()" class="btn btn-primary">+ Tambah Layanan</button>
+            </header>
+
+            <div class="content-container">
+                <!-- Add/Edit Form -->
+                <div id="formSection" class="card hidden">
+                    <div class="card-header">
+                        <h3 class="card-title" id="formTitle">Tambah Layanan</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="serviceForm" onsubmit="saveService(event)">
+                            <input type="hidden" id="serviceId">
+                            <input type="hidden" id="serviceImageUrl">
+
+                            <div style="display: grid; grid-template-columns: 1fr 200px; gap: var(--spacing-xl);">
+                                <div>
+                                    <div class="form-group">
+                                        <label>Nama Layanan</label>
+                                        <input type="text" id="serviceName" placeholder="Contoh: Desain Rumah Mewah"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Deskripsi</label>
+                                        <textarea id="serviceDescription" rows="4"
+                                            placeholder="Jelaskan detail layanan..."></textarea>
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+                                        <div class="form-group">
+                                            <label>Harga (Rp)</label>
+                                            <input type="number" id="servicePrice" placeholder="0" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Kategori</label>
+                                            <select id="serviceCategory">
+                                                <option value="Residential">Residential Design</option>
+                                                <option value="Commercial">Commercial Architecture</option>
+                                                <option value="Interior">Interior Space</option>
+                                                <option value="Urban Planning">Urban Planning</option>
+                                                <option value="Landscape">Landscape Design</option>
+                                                <option value="Consultation">Studio Consultation</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Foto Layanan</label>
+                                    <div id="imagePreview"
+                                        style="width: 100%; height: 150px; background: var(--bg-primary); border-radius: var(--radius-md); border: 2px dashed rgba(255,107,107,0.3); display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: var(--spacing-sm);">
+                                        <span style="color: var(--text-muted); font-size: 0.8rem;">Preview</span>
+                                    </div>
+                                    <input type="file" id="serviceImageInput" accept="image/*" style="display: none;"
+                                        onchange="previewAndUploadImage(this)">
+                                    <button type="button" onclick="document.getElementById('serviceImageInput').click()"
+                                        class="btn btn-secondary" style="width: 100%; padding: var(--spacing-sm);">Pilih
+                                        Foto</button>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-md mt-20">
+                                <button type="submit" id="btnSaveService" class="btn btn-primary">Simpan
+                                    Layanan</button>
+                                <button type="button" onclick="hideForm()" class="btn btn-danger">Batal</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Services List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Daftar Layanan</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="servicesList" class="projects-grid">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        const user = getFromStorage('user');
+        if (!user || user.role !== 'admin') {
+            alert('Akses ditolak.');
+            window.location.href = '../login.html';
+        }
+
+        async function loadServices() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/services/admin`);
+                const data = await response.json();
+                if (data.success) displayServices(data.data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function displayServices(services) {
+            const html = services.map(s => `
+                <div class="project-card">
+                    <div class="project-thumbnail">
+                        ${s.image_url ?
+                    `<img src="${API_CONFIG.BASE_URL.replace('/api', '')}${s.image_url}" alt="${s.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                    `<img src="${getServiceImage(s.category)}" alt="${s.category}" style="width: 100%; height: 100%; object-fit: cover;">`
+                }
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">${s.name}</h3>
+                        <p class="project-description">${s.description || '-'}</p>
+                        <p><strong>Rp ${parseInt(s.price).toLocaleString('id-ID')}</strong> | ${s.category}</p>
+                        <div class="flex gap-sm mt-20">
+                            <button onclick='editService(${JSON.stringify(s)})' class="btn btn-secondary" style="flex: 1; justify-content: center;">Edit</button>
+                            <button onclick="deleteService(${s.id})" class="btn btn-danger" style="padding: var(--spacing-sm);">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('servicesList').innerHTML = html || '<p>Belum ada layanan.</p>';
+        }
+
+        function getServiceImage(category) {
+            const images = {
+                'Residential': '../img/service_residential.png',
+                'Commercial': '../img/service_commercial.png',
+                'Interior': '../img/service_interior.png',
+                'Landscape': '../img/service_urban.png',
+                'Urban Planning': '../img/service_urban.png',
+                'Consultation': '../img/service_urban.png'
+            };
+            return images[category] || '../img/portfolio1.png';
+        }
+
+        async function previewAndUploadImage(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const btnSave = document.getElementById('btnSaveService');
+                const previewContainer = document.getElementById('imagePreview');
+
+                // Set loading state
+                btnSave.disabled = true;
+                btnSave.textContent = 'Uploading...';
+                previewContainer.innerHTML = '<div class="loading-spinner"></div><p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">Sedang upload...</p>';
+                previewContainer.style.flexDirection = 'column';
+
+                // Preview locally
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // Temporarily show local preview if needed, but we prefer waiting for server confirm
+                }
+                reader.readAsDataURL(file);
+
+                // Upload
+                const formData = new FormData();
+                formData.append('image', file);
+
+                try {
+                    const response = await fetch(`${API_CONFIG.BASE_URL}/services/admin/upload-image`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+
+                    if (result.success) {
+                        document.getElementById('serviceImageUrl').value = result.data.imageUrl;
+                        previewContainer.innerHTML = `<img src="${API_CONFIG.BASE_URL.replace('/api', '')}${result.data.imageUrl}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                        console.log('Image uploaded:', result.data.imageUrl);
+                    } else {
+                        alert('Gagal upload gambar: ' + result.message);
+                        previewContainer.innerHTML = '<span style="color: var(--accent-pink); font-size: 0.8rem;">Gagal Upload</span>';
+                    }
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    alert('Terjadi kesalahan saat upload gambar.');
+                    previewContainer.innerHTML = '<span style="color: var(--accent-pink); font-size: 0.8rem;">Error</span>';
+                } finally {
+                    btnSave.disabled = false;
+                    btnSave.textContent = 'Simpan Layanan';
+                }
+            }
+        }
+
+        function showAddForm() {
+            document.getElementById('formSection').classList.remove('hidden');
+            document.getElementById('formTitle').textContent = 'Tambah Layanan Baru';
+            document.getElementById('serviceForm').reset();
+            document.getElementById('serviceId').value = '';
+            document.getElementById('serviceImageUrl').value = '';
+            document.getElementById('imagePreview').innerHTML = '<span style="color: var(--text-muted); font-size: 0.8rem;">Preview</span>';
+        }
+
+        function hideForm() {
+            document.getElementById('formSection').classList.add('hidden');
+        }
+
+        function editService(service) {
+            document.getElementById('formSection').classList.remove('hidden');
+            document.getElementById('formTitle').textContent = 'Edit Layanan';
+            document.getElementById('serviceId').value = service.id;
+            document.getElementById('serviceName').value = service.name;
+            document.getElementById('serviceDescription').value = service.description || '';
+            document.getElementById('servicePrice').value = service.price;
+            document.getElementById('serviceCategory').value = service.category;
+            document.getElementById('serviceImageUrl').value = service.image_url || '';
+
+            if (service.image_url) {
+                document.getElementById('imagePreview').innerHTML = `<img src="${API_CONFIG.BASE_URL.replace('/api', '')}${service.image_url}" style="width: 100%; height: 100%; object-fit: cover;">`;
+            } else {
+                document.getElementById('imagePreview').innerHTML = '<span style="color: var(--text-muted); font-size: 0.8rem;">Tidak ada foto</span>';
+            }
+        }
+
+        async function saveService(e) {
+            e.preventDefault();
+            const id = document.getElementById('serviceId').value;
+            const data = {
+                name: document.getElementById('serviceName').value,
+                description: document.getElementById('serviceDescription').value,
+                price: document.getElementById('servicePrice').value,
+                category: document.getElementById('serviceCategory').value,
+                image_url: document.getElementById('serviceImageUrl').value,
+                is_active: true
+            };
+
+            try {
+                const url = id ? `${API_CONFIG.BASE_URL}/services/admin/${id}` : `${API_CONFIG.BASE_URL}/services/admin`;
+                const method = id ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert(id ? 'Layanan berhasil diupdate!' : 'Layanan berhasil ditambahkan!');
+                    hideForm();
+                    loadServices();
+                } else {
+                    alert('Gagal: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan.');
+            }
+        }
+
+        async function deleteService(id) {
+            if (!confirm('Yakin ingin menghapus layanan ini?')) return;
+
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/services/admin/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Layanan berhasil dihapus!');
+                    loadServices();
+                } else {
+                    alert('Gagal menghapus: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan.');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadServices);
+    </script>
+</body>
+
+</html>

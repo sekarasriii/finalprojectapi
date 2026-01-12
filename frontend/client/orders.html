@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | FeSpace Studio</title>
+    <meta name="description" content="Track your architectural project status and orders with FeSpace Studio.">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <h1>FeSpace Studio</h1>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="dashboard.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>Dashboard</a></li>
+                <li><a href="services.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>Layanan</a></li>
+                <li><a href="orders.html" class="active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>Pesanan Saya</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout()" class="sidebar-nav-logout">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <h2>Pesanan Saya</h2>
+                <a href="services.html" class="btn btn-primary">+ Buat Pesanan Baru</a>
+            </header>
+
+            <div class="content-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Daftar Pesanan</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="ordersList">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        const user = getFromStorage('user');
+        if (!user || user.role !== 'client') {
+            alert('Akses ditolak.');
+            window.location.href = '../login.html';
+        }
+
+        const apiKey = getFromStorage('apiKey');
+        if (!apiKey) {
+            alert('Generate API Key terlebih dahulu di dashboard.');
+            window.location.href = 'dashboard.html';
+        }
+
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/orders`, {
+                    headers: { 'x-api-key': apiKey }
+                });
+
+                const data = await response.json();
+                if (data.success) displayOrders(data.data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function displayOrders(orders) {
+            if (orders.length === 0) {
+                document.getElementById('ordersList').innerHTML = `
+                    <div class="alert alert-info">
+                        Belum ada pesanan. <a href="services.html">Buat pesanan pertama Anda!</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = orders.map(o => `
+                <div class="card" style="margin-bottom: var(--spacing-md);">
+                    <div class="card-body">
+                        <div class="flex-between" style="margin-bottom: var(--spacing-md);">
+                            <div>
+                                <h3>${o.service_name}</h3>
+                                <p style="color: var(--text-secondary); margin: var(--spacing-xs) 0;">${o.category}</p>
+                                ${o.notes ? `<p style="color: var(--text-muted); font-size: 0.9rem; margin-top: var(--spacing-xs);"><em>Catatan: ${o.notes}</em></p>` : ''}
+                            </div>
+                            <span class="badge ${getStatusClass(o.status)}">${getStatusText(o.status)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-light); padding-top: var(--spacing-md);">
+                            <div>
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">Total:</span>
+                                <strong style="color: var(--accent-orange); font-size: 1.1rem; margin-left: var(--spacing-xs);">
+                                    Rp ${parseInt(o.total_price).toLocaleString('id-ID')}
+                                </strong>
+                            </div>
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">
+                                ${new Date(o.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('ordersList').innerHTML = html;
+        }
+
+        function getStatusClass(status) {
+            const classes = {
+                'pending': 'warning',
+                'approved': 'primary',
+                'in_progress': 'primary',
+                'completed': 'success',
+                'rejected': 'danger'
+            };
+            return classes[status] || 'primary';
+        }
+
+        function getStatusText(status) {
+            const texts = {
+                'pending': 'Pending',
+                'approved': 'Approved',
+                'in_progress': 'In Progress',
+                'completed': 'Completed',
+                'rejected': 'Rejected'
+            };
+            return texts[status] || status;
+        }
+
+        window.addEventListener('DOMContentLoaded', loadOrders);
+    </script>
+</body>
+
+</html>

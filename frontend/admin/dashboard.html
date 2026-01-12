@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | FeSpace Studio</title>
+    <meta name="description" content="FeSpace Studio Admin Portal - Manage architectural services and design projects.">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <h1>FeSpace Studio</h1>
+            </div>
+
+            <ul class="sidebar-nav">
+                <li>
+                    <a href="dashboard.html" class="active">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="services.html">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        Kelola Layanan
+                    </a>
+                </li>
+                <li>
+                    <a href="orders.html">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Kelola Pesanan
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout()" class="sidebar-nav-logout">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div>
+                    <h2>Dashboard Admin</h2>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Admin</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content-container">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalServices">0</h3>
+                            <p>Total Layanan</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalOrders">0</h3>
+                            <p>Total Pesanan</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pendingOrders">0</h3>
+                            <p>Pesanan Pending</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Pesanan Terbaru</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="recentOrders">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        // Check if admin
+        const user = getFromStorage('user');
+        if (!user || user.role !== 'admin') {
+            alert('Akses ditolak. Hanya admin yang bisa mengakses halaman ini.');
+            window.location.href = '../login.html';
+        }
+
+        // Display user info
+        document.getElementById('userName').textContent = user.name;
+        const initials = user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        document.getElementById('userAvatar').textContent = initials;
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                // Load stats
+                const statsResponse = await fetch(`${API_CONFIG.BASE_URL}/admin/stats`);
+                const statsData = await statsResponse.json();
+
+                if (statsData.success) {
+                    document.getElementById('totalOrders').textContent = statsData.data.total_orders;
+                    const pending = statsData.data.by_status.find(s => s.status === 'pending');
+                    document.getElementById('pendingOrders').textContent = pending ? pending.count : 0;
+                }
+
+                // Load services count
+                const servicesResponse = await fetch(`${API_CONFIG.BASE_URL}/services/admin`);
+                const servicesData = await servicesResponse.json();
+                if (servicesData.success) {
+                    document.getElementById('totalServices').textContent = servicesData.data.length;
+                }
+
+                // Load recent orders
+                const ordersResponse = await fetch(`${API_CONFIG.BASE_URL}/admin/orders`);
+                const ordersData = await ordersResponse.json();
+
+                if (ordersData.success) {
+                    displayRecentOrders(ordersData.data.slice(0, 5));
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        function displayRecentOrders(orders) {
+            const container = document.getElementById('recentOrders');
+
+            if (orders.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">Belum ada pesanan.</p>';
+                return;
+            }
+
+            const table = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Layanan</th>
+                            <th>Harga</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${orders.map(order => `
+                            <tr>
+                                <td>${order.client_name}</td>
+                                <td>${order.service_name}</td>
+                                <td>Rp ${parseInt(order.total_price).toLocaleString('id-ID')}</td>
+                                <td>
+                                    <span class="badge ${getStatusClass(order.status)}">${getStatusText(order.status)}</span>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = table;
+        }
+
+        function getStatusClass(status) {
+            const classes = {
+                'pending': 'warning',
+                'approved': 'primary',
+                'in_progress': 'primary',
+                'completed': 'success',
+                'rejected': 'danger'
+            };
+            return classes[status] || 'primary';
+        }
+
+        function getStatusText(status) {
+            const texts = {
+                'pending': 'Pending',
+                'approved': 'Approved',
+                'in_progress': 'In Progress',
+                'completed': 'Completed',
+                'rejected': 'Rejected'
+            };
+            return texts[status] || status;
+        }
+
+        // Load on page load
+        window.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+
+</html>
