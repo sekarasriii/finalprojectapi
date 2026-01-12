@@ -55,3 +55,61 @@ router.post('/register', async (req, res) => {
         });
     }
 });
+// POST /api/auth/login - Login user
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Validasi input
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email dan password harus diisi.'
+            });
+        }
+
+        // Cari user berdasarkan email
+        const [users] = await db.query(
+            'SELECT * FROM users WHERE email = ?',
+            [email]
+        );
+
+        if (users.length === 0) {
+            return res.status(401).json({
+                success: false,
+                message: 'Email atau password salah.'
+            });
+        }
+
+        const user = users[0];
+
+        // Verifikasi password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                success: false,
+                message: 'Email atau password salah.'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Login berhasil.',
+            data: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Terjadi kesalahan saat login.'
+        });
+    }
+});
+
+module.exports = router;
