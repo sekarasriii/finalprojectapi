@@ -29,3 +29,23 @@ async function validateApiKey(req, res, next) {
                 message: 'API Key tidak valid atau sudah tidak aktif.'
             });
         }
+        // Simpan data user ke request untuk digunakan di route
+        req.user = {
+            id: rows[0].user_id,
+            name: rows[0].name,
+            email: rows[0].email,
+            role: rows[0].role
+        };
+
+        next();
+    } catch (error) {
+        console.error('Error validating API Key:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Terjadi kesalahan saat validasi API Key.'
+        });
+    }
+}
+
+module.exports = { validateApiKey };
+
