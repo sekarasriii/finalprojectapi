@@ -13,3 +13,19 @@ async function validateApiKey(req, res, next) {
                 message: 'API Key diperlukan. Sertakan x-api-key di header request.'
             });
         }
+        // Validasi API Key di database
+        const [rows] = await db.query(
+            `SELECT ak.*, u.id as user_id, u.name, u.email, u.role 
+             FROM api_keys ak 
+             JOIN users u ON ak.user_id = u.id 
+             WHERE ak.api_key = ? AND ak.is_active = TRUE`,
+            [apiKey]
+        );
+
+        // Cek apakah API Key valid
+        if (rows.length === 0) {
+            return res.status(401).json({
+                success: false,
+                message: 'API Key tidak valid atau sudah tidak aktif.'
+            });
+        }
