@@ -53,3 +53,64 @@ const createOrder = async (req, res) => {
         });
     }
 };
+// Get Orders - Local API (hanya data user sendiri)
+const getOrders = async (req, res) => {
+    try {
+        // Cek data access type
+        if (req.user.dataAccessType !== 'orders') {
+            return res.status(403).json({
+                success: false,
+                message: 'API Key Anda tidak memiliki akses ke data pesanan. Generate API Key dengan data_access_type: orders'
+            });
+        }
+
+        const userId = req.user.id;
+        const userRole = req.user.role;
+
+        let query;
+        let params;
+
+        // Jika admin, tampilkan semua order
+        // Jika client, tampilkan order miliknya saja
+        if (userRole === 'admin') {
+            query = `
+                SELECT o.*, u.name as user_name, u.email, s.service_name, s.price
+                FROM orders o
+                JOIN users u ON o.user_id = u.user_id
+                JOIN services s ON o.service_id = s.service_id
+                ORDER BY o.order_date DESC
+            `;
+            params = [];
+        } else {
+            query = `
+                SELECT o.*, s.service_name, s.price
+                FROM orders o
+                JOIN services s ON o.service_id = s.service_id
+                WHERE o.user_id = ?
+                ORDER BY o.order_date DESC
+            `;
+            params = [userId];
+        }
+
+        const [orders] = await db.query(query, params);
+
+        res.status(200).json({
+            success: true,
+            message: userRole === 'admin' ? 'Semua pesanan' : 'Pesanan Anda',
+            access_info: {
+                user: req.user.name,
+                role: userRole,
+                access_type: req.user.dataAccessType
+            },
+            total: orders.length,
+            data: orders
+        });
+    } catch (error) {
+        console.error('Error in getOrders:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Terjadi kesalahan saat mengambil data pesanan'
+        });
+    }
+};
+
