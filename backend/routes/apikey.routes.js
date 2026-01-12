@@ -66,3 +66,35 @@ router.post('/generate', async (req, res) => {
         });
     }
 });
+// GET /api/apikey/:user_id - Get API Key user
+router.get('/:user_id', async (req, res) => {
+    try {
+        const { user_id } = req.params;
+
+        // Ambil API Key aktif user
+        const [apiKeys] = await db.query(
+            'SELECT id, api_key, created_at FROM api_keys WHERE user_id = ? AND is_active = TRUE',
+            [user_id]
+        );
+
+        if (apiKeys.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'API Key tidak ditemukan. Silakan generate API Key terlebih dahulu.'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: apiKeys[0]
+        });
+    } catch (error) {
+        console.error('Error getting API Key:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Terjadi kesalahan saat mengambil API Key.'
+        });
+    }
+});
+
+module.exports = router;
