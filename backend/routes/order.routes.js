@@ -60,3 +60,65 @@ router.post('/', async (req, res) => {
     }
 });
 
+// GET My Orders (Client)
+router.get('/', async (req, res) => {
+    try {
+        const client_id = req.user.id;
+
+        const [orders] = await db.query(
+            `SELECT o.*, s.name as service_name, s.category 
+             FROM orders o 
+             JOIN services s ON o.service_id = s.id 
+             WHERE o.client_id = ? 
+             ORDER BY o.created_at DESC`,
+            [client_id]
+        );
+
+        res.json({
+            success: true,
+            data: orders
+        });
+    } catch (error) {
+        console.error('Error getting orders:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Terjadi kesalahan saat mengambil data pesanan.'
+        });
+    }
+});
+
+// GET Order Detail (Client - own order only)
+router.get('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const client_id = req.user.id;
+
+        const [orders] = await db.query(
+            `SELECT o.*, s.name as service_name, s.description as service_description, s.category 
+             FROM orders o 
+             JOIN services s ON o.service_id = s.id 
+             WHERE o.id = ? AND o.client_id = ?`,
+            [id, client_id]
+        );
+
+        if (orders.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Pesanan tidak ditemukan.'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: orders[0]
+        });
+    } catch (error) {
+        console.error('Error getting order detail:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Terjadi kesalahan saat mengambil detail pesanan.'
+        });
+    }
+});
+
+module.exports = router;
