@@ -1,3 +1,27 @@
+**Tampilan Website**
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/023dd9c9-9209-4e21-83e0-f4edb0f62d5c" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/4129fffe-c5c6-4186-9e52-bfd246e60c2f" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/2933402d-100c-46f6-a92a-a7cb63d0c2c1" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/75eeec2e-5f2f-4d72-a242-39f06daa43af" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/e6e4bb0a-b8e5-4226-95a3-756b49b0cce4" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/2847722d-9fd6-4d51-b6d0-3de3cd960443" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/5681a612-7c0e-4c52-972f-8d8dfe194fd1" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/aa50c607-8c22-434c-b22e-3625d74db33a" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/76820a29-1a73-416c-ae49-b31e77a54acf" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/facca572-d838-4153-8bdb-37b2aff9057e" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f2fb1807-513e-4329-aa82-6e4485ae4353" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/72ae5557-0f62-4707-9e1b-b42e675bb212" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/eef397e2-5006-435e-a0bf-664bbc665aef" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/16c24ff3-2ca9-4db4-a516-bf269b5d7bbb" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/2dd983ae-b858-4207-92d1-9af7dbc966eb" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f4e21d63-880e-4fae-841b-79c81e20efea" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f63a5a1d-df75-436d-b8df-485f66bc6519" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/b14311ab-c901-45e4-bf0b-64865a01b080" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/e6e46a69-8d7b-4aba-ace2-eeb82a2a68ea" />
+
+
+
+**Hasil Endpoint API**
 **Authentication Routes (2 endpoints)**
 1. Register User
 <img width="1919" height="1146" alt="client3" src="https://github.com/user-attachments/assets/4cb389da-0ee9-4500-9ad4-bed30d65dc5e" />
